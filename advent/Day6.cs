@@ -16,6 +16,27 @@ class Day6
             .Sum();
 
         Console.WriteLine($"Part 1 sum: {sum}");
+
+        var sum2 = ReadGroups()
+            .Select(g => new
+            {
+                MemberCount = g.Length,
+                AnswerSummary = g.Aggregate(
+                    new Dictionary<char, int>(),
+                    (d, answers) =>
+                    {
+                        foreach (char a in answers)
+                        {
+                            int curr = (d.TryGetValue(a, out var s)) ? s : 0;
+                            d[a] = ++s;
+                        }
+                        return d;
+                    })
+            })
+            .Select(g => g.AnswerSummary.Count(p => p.Value == g.MemberCount))
+            .Sum();
+
+        Console.WriteLine($"Part 2 sum: {sum2}");
     }
 
     public IEnumerable<string[]> ReadGroups()
